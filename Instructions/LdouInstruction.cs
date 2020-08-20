@@ -14,9 +14,9 @@ namespace mmix.Instructions
         public override ExecutionResult ExecuteInstruction(MmixComputer mmixComputer, Tetra tetra)
         {
             var reg = mmixComputer.Registers[tetra.X];
-            var a = mmixComputer.Registers[tetra.Y].ToLong();// + mmixComputer.Registers[tetra.Z].ToLong();
-            var bytes = mmixComputer.ReadMemory((int)a, 8);
-            reg.StoreBytes(bytes);
+            ulong a = mmixComputer.Registers[tetra.Y].ToULong() + mmixComputer.Registers[tetra.Z].ToULong();
+            var bytes = mmixComputer.ReadOcta(a);
+            reg.Store(bytes);
 
             return ExecutionResult.CONTINUE;
         }

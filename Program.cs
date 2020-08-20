@@ -13,8 +13,8 @@ namespace mmix
             var bytes = ASCIIEncoding.ASCII.GetBytes("hello");
 
             int pointer = 0x28;
-            mmixComputer.Registers[0].StoreLong(1);
-            mmixComputer.Registers[1].StoreLong(0x08);
+            mmixComputer.Registers[0].Store(1);
+            mmixComputer.Registers[1].Store(0x08);
 
             mmixComputer.AddToMemory(0x08, (ulong)pointer);
             foreach(var b in bytes)

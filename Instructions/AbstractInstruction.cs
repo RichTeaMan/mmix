@@ -10,6 +10,8 @@ namespace mmix.Instructions
 
         public abstract string Symbol { get; }
 
+        public virtual string SpecificationLink => $"https://mmix.cs.hm.edu/doc/instructions-en.html#{OpCode}";
+
         public ExecutionResult Execute(MmixComputer mmixComputer, Tetra tetra)
         {
             //Console.WriteLine(Symbol);

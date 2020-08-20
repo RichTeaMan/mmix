@@ -34,7 +34,17 @@ namespace mmix
 
         public void AddToMemory(int address, uint value)
         {
-            byte[] intBytes = BitConverter.GetBytes(value).Reverse().ToArray();
+            AddToMemory((ulong)address, value);
+        }
+
+        public void AddToMemory(int address, ulong value)
+        {
+            AddToMemory((ulong) address, value);
+        }
+
+        public void AddToMemory(ulong address, uint value)
+        {
+            byte[] intBytes = value.ToBytes();
             foreach(var b in intBytes)
             {
                 Memory[address] = b;
@@ -42,9 +52,9 @@ namespace mmix
             }
         }
 
-        public void AddToMemory(int address, ulong value)
+        public void AddToMemory(ulong address, ulong value)
         {
-            byte[] intBytes = BitConverter.GetBytes(value).Reverse().ToArray();
+            byte[] intBytes = value.ToBytes();
             foreach (var b in intBytes)
             {
                 Memory[address] = b;
@@ -52,15 +62,32 @@ namespace mmix
             }
         }
 
-        public byte[] ReadMemory(int address, int count)
+        public byte[] ReadMemory(ulong address, int count)
         {
             byte[] bytes = new byte[count];
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
-                int offset = i + address;
+                ulong offset = (ulong)i + address;
                 bytes[i] = Memory[offset];
             }
             return bytes;
+        }
+
+        public void StoreInMemory(ulong address, Octa octa)
+        {
+            AddToMemory(AlignAddress(address, 8), octa.ToULong());
+        }
+
+        private ulong AlignAddress(ulong address, int alignment)
+        {
+            return address - (address % (ulong)alignment);
+        }
+
+        public Octa ReadOcta(ulong address)
+        {
+            var bytes = ReadMemory(AlignAddress(address, 8), 8);
+            return new Octa(bytes);
+
         }
 
         public MmixComputer()

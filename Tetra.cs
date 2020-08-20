@@ -25,10 +25,16 @@ namespace mmix
         public byte Y => bytes[2];
         public byte Z => bytes[3];
 
-        internal void StoreInt(int value)
+        public void Store(int value)
         {
-            byte[] intBytes = BitConverter.GetBytes(value);
-            bytes.SetArray(intBytes);
+            byte[] bytes = value.ToBytes();
+            this.bytes.SetArray(bytes);
+        }
+
+        public void Store(uint value)
+        {
+            byte[] bytes = value.ToBytes();
+            this.bytes.SetArray(bytes);
         }
 
         public byte FetchByte(int n)
@@ -37,7 +43,12 @@ namespace mmix
         }
         public int ToInt()
         {
-            return BitConverter.ToInt32(bytes);
+            return bytes.ToInt();
+        }
+
+        public uint ToUInt()
+        {
+            return bytes.ToUInt();
         }
 
         public override string ToString()

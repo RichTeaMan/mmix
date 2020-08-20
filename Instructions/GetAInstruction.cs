@@ -14,13 +14,13 @@ namespace mmix.Instructions
         public override ExecutionResult ExecuteInstruction(MmixComputer mmixComputer, Tetra tetra)
         {
             // register to store into
-            var reg = mmixComputer.Registers[tetra.X.ToInt()];
+            var reg = mmixComputer.Registers[tetra.X];
 
             // multiply by 4 as ops are 4 bytes wide
             var relativeAddress = 4 * (tetra.Y + tetra.Z);
 
             var address = mmixComputer.PC + relativeAddress;
-            reg.StoreLong(address);
+            reg.Store(address);
 
             return ExecutionResult.CONTINUE;
         }

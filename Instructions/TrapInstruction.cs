@@ -16,7 +16,7 @@ namespace mmix.Instructions
 
             // TODO there is a lot more to be understood here - http://mmix.cs.hm.edu/doc/instructions-en.html#TRAP
             // for now, XYZ == 0 terminates the program.
-            if (tetra.Y.ToInt() == Constants.Fputs && tetra.Z.ToInt() == 1)
+            if (tetra.Y == Constants.Fputs && tetra.Z == 1)
             {
                 // get pointer from $255
                 var address = mmixComputer.Registers[255].ToLong();
