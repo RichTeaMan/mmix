@@ -1,6 +1,7 @@
 ﻿using mmix.Instructions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -8,7 +9,7 @@ namespace mmix
 {
     public class MmixComputer
     {
-        private AbstractInstruction[] instructionSet = {new TrapInstruction(), new GetAInstruction(), new LdouInstruction()};
+        private AbstractInstruction[] instructionSet = { new TrapInstruction(), new GetAInstruction(), new LdouInstruction() };
         public Octa[] Registers { get; private set; } = new Octa[256];
 
         public Octa[] SpecialRegisters { get; private set; } = new Octa[32];
@@ -21,7 +22,7 @@ namespace mmix
         /// <summary>
         /// Program counter. Also known as @.
         /// </summary>
-        public int PC { get; set; }
+        public ulong PC { get; set; }
 
         /// <summary>
         /// Gets bootstrap register (trap).
@@ -39,13 +40,13 @@ namespace mmix
 
         public void AddToMemory(int address, ulong value)
         {
-            AddToMemory((ulong) address, value);
+            AddToMemory((ulong)address, value);
         }
 
         public void AddToMemory(ulong address, uint value)
         {
             byte[] intBytes = value.ToBytes();
-            foreach(var b in intBytes)
+            foreach (var b in intBytes)
             {
                 Memory[address] = b;
                 address++;
@@ -90,9 +91,50 @@ namespace mmix
 
         }
 
+        public void LoadStreamIntoMemory(Stream stream)
+        {
+            using var reader = new StreamReader(stream);
+            string line;
+
+            // program counter
+            ulong? pc = null;
+            // Read and display lines from the file until the end of the file is reached.
+            while ((line = reader.ReadLine()) != null)
+            {
+                string cleanLine = line.Replace(" ", string.Empty).Replace("#", string.Empty);
+                var parts = cleanLine.Split(":");
+                if (parts.Length != 2)
+                {
+                    throw new Exception($"Invalid line: {line}");
+                }
+                string addressStr = parts[0];
+                string valueStr = parts[1];
+
+                ulong address;
+                uint value;
+
+                if (!(ulong.TryParse(addressStr, System.Globalization.NumberStyles.HexNumber, null, out address) &&
+                uint.TryParse(valueStr, System.Globalization.NumberStyles.HexNumber, null, out value)))
+                {
+                    throw new Exception($"Could not parse hex in line: {line}");
+                }
+
+                if (pc == null)
+                {
+                    pc = address;
+                }
+                AddToMemory(address, value);
+            }
+            if (pc == null)
+            {
+                throw new Exception("Program unable to load.");
+            }
+            PC = pc.Value;
+        }
+
         public MmixComputer()
         {
-            for(int i = 0; i < Registers.Length; i++)
+            for (int i = 0; i < Registers.Length; i++)
             {
                 Registers[i] = new Octa();
             }
@@ -100,7 +142,7 @@ namespace mmix
 
         public ExecutionResult Execute()
         {
-            var current = new Tetra(new byte[] { Memory[PC], Memory[PC+1], Memory[PC+2], Memory[PC+3] });
+            var current = new Tetra(new byte[] { Memory[PC], Memory[PC + 1], Memory[PC + 2], Memory[PC + 3] });
             var instruction = instructionSet.SingleOrDefault(i => i.OpCode == current.OpCode);
             if (instruction == null)
             {

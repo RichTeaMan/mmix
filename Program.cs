@@ -1,16 +1,24 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 namespace mmix
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             Console.WriteLine("MMIX Simulator");
 
+            if (args.Length < 1)
+            {
+                Console.WriteLine("A object file must be specified");
+                return -1;
+            }
+            string objectFile = args[0];
+
             var mmixComputer = new MmixComputer();
-            var bytes = ASCIIEncoding.ASCII.GetBytes("hello");
+            var bytes = Encoding.ASCII.GetBytes(objectFile.Replace(".mmo", string.Empty));
 
             int pointer = 0x28;
             mmixComputer.Registers[0].Store(1);
@@ -23,20 +31,16 @@ namespace mmix
                 pointer++;
             }
 
-            mmixComputer.PC = 0x100;
-
-            mmixComputer.AddToMemory(0x100, 0x8fff0100);
-            mmixComputer.AddToMemory(0x104, 0x00000701);
-            mmixComputer.AddToMemory(0x108, 0xf4ff0003);
-            mmixComputer.AddToMemory(0x10c, 0x00000701);
-            mmixComputer.AddToMemory(0x110, 0x00000000);
-            mmixComputer.AddToMemory(0x114, 0x2c20776f);
-            mmixComputer.AddToMemory(0x118, 0x726c640a);
-            mmixComputer.AddToMemory(0x11c, 0x00);
+            using (var stream = File.OpenRead(objectFile))
+            {
+                mmixComputer.LoadStreamIntoMemory(stream);
+            }
 
             while (mmixComputer.Execute() == ExecutionResult.CONTINUE) { }
 
             Console.WriteLine("Program finished");
+
+            return 0;
         }
     }
 }

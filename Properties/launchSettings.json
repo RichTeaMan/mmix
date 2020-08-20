@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "mmix": {
+      "commandName": "Project",
+      "commandLineArgs": "hello.mmo"
+    }
+  }
+}

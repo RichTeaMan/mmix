@@ -17,9 +17,18 @@ namespace mmix.Instructions
             var reg = mmixComputer.Registers[tetra.X];
 
             // multiply by 4 as ops are 4 bytes wide
-            var relativeAddress = 4 * (tetra.Y + tetra.Z);
+            long relativeAddress = 4 * (tetra.Y + tetra.Z);
 
-            var address = mmixComputer.PC + relativeAddress;
+            // sign check as there isn't a ulong + long overload that handles negatives (I think)
+            ulong address;
+            if (relativeAddress > 0)
+            {
+                address = mmixComputer.PC + (ulong)relativeAddress;
+            }
+            else
+            {
+                address = mmixComputer.PC - (ulong)(-relativeAddress);
+            }
             reg.Store(address);
 
             return ExecutionResult.CONTINUE;
