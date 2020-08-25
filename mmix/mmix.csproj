@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\lib\lib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="hello.mmo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
