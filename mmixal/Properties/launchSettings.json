@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "mmixal": {
+      "commandName": "Project",
+      "commandLineArgs": "programs/hello.mms"
+    }
+  }
+}

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mmix", "mmix\mmix.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lib", "lib\lib.csproj", "{8C1AE490-2FA0-4BCD-BF70-1695C209FF9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mmixal", "mmixal\mmixal.csproj", "{8BAF0E51-67F9-4A02-8C5A-299DDD5C4DD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8C1AE490-2FA0-4BCD-BF70-1695C209FF9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C1AE490-2FA0-4BCD-BF70-1695C209FF9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C1AE490-2FA0-4BCD-BF70-1695C209FF9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BAF0E51-67F9-4A02-8C5A-299DDD5C4DD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BAF0E51-67F9-4A02-8C5A-299DDD5C4DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BAF0E51-67F9-4A02-8C5A-299DDD5C4DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BAF0E51-67F9-4A02-8C5A-299DDD5C4DD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
