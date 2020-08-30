@@ -8,9 +8,8 @@ namespace mmixal.PseudoInstructions
         {
             // register alias
             byte registerValue;
-            if (assemblyInstruction.Expression.StartsWith("$") &&
-                byte.TryParse(assemblyInstruction.Expression.Replace("$", string.Empty), out registerValue) &&
-                !string.IsNullOrWhiteSpace(assemblyInstruction.Label))
+            if (!string.IsNullOrWhiteSpace(assemblyInstruction.Label) &&
+                TryParseRegister(assemblyInstruction.Expression, out registerValue))
             {
                 assemblerState.CreateRegisterAlias(assemblyInstruction.Label, registerValue);
             }

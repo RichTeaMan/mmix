@@ -25,6 +25,7 @@ namespace mmixal
             var instructions = new List<AssemblyInstruction>();
             var operators = new List<AbstractOperator>();
             operators.Add(new IsInstruction());
+            operators.Add(new LocInstruction());
 
             ulong lineNumber = 1;
             using (var stream = File.OpenRead(objectFile))

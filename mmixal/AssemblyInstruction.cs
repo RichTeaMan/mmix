@@ -80,11 +80,16 @@ namespace mmixal
         public void GenerateOutput(AssemblerState assemblerState, StreamWriter streamWriter)
         {
             var output = Op.GenerateBinary(this, assemblerState);
+
             if (!string.IsNullOrWhiteSpace(output.Warning))
             {
                 assemblerState.RaiseWarning(output.Warning);
             }
-            streamWriter.WriteLine(output.Output);
+            if (!(Op is AbstractPseudoInstruction))
+            {
+                streamWriter.WriteLine($"#{assemblerState.ProgramCounter.ToString("x")}: {output.Output}");
+                assemblerState.ProgramCounter += 4;
+            }
         }
     }
 }

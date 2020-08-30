@@ -9,6 +9,8 @@ namespace mmixal
     {
         private Dictionary<string, AbstractVariable> variables = new Dictionary<string, AbstractVariable>();
 
+        public ulong ProgramCounter { get; set; } = 0;
+
         public AssemblerState RaiseWarning(string message)
         {
             Console.WriteLine($"Warning - {message}");
