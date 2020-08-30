@@ -24,6 +24,7 @@ namespace mmixal
 
             var instructions = new List<AssemblyInstruction>();
             var operators = new List<AbstractOperator>();
+            operators.Add(new IsInstruction());
 
             ulong lineNumber = 1;
             using (var stream = File.OpenRead(objectFile))
@@ -38,7 +39,7 @@ namespace mmixal
                 }
             }
 
-            var log = new AssemblerLog();
+            var log = new AssemblerState();
             var outFile = objectFile.Replace(".mms", ".mmo");
             File.Delete(outFile);
             using (var outStream = File.OpenWrite(outFile))

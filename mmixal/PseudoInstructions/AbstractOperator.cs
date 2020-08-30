@@ -8,6 +8,6 @@ namespace mmixal.PseudoInstructions
     public abstract class AbstractOperator
     {
         public abstract string Symbol { get; }
-        public abstract OperatorOutput GenerateBinary(string expression);
+        public abstract OperatorOutput GenerateBinary(AssemblyInstruction assemblyInstruction, AssemblerState assemblerState);
     }
 }

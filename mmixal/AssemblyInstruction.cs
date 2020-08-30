@@ -24,6 +24,16 @@ namespace mmixal
             Expression = expression ?? throw new ArgumentNullException(nameof(expression));
         }
 
+        private static string fetchArrayElement(string[] tokens, int index)
+        {
+            string result = string.Empty;
+            if (index >= 0 && index < tokens.Length)
+            {
+                result = tokens[index];
+            }
+            return result;
+        }
+
         public static AssemblyInstruction ReadFromLine(ICollection<AbstractOperator> operators, ulong lineNumber, string line)
         {
             if (operators is null)
@@ -52,10 +62,12 @@ namespace mmixal
             {
                 op = secondOp;
                 label = tokens[0];
+                expression = fetchArrayElement(tokens, 2);
             }
             else if (firstOp != null)
             {
                 op = firstOp;
+                expression = fetchArrayElement(tokens, 1);
             }
             else
             {
@@ -65,12 +77,12 @@ namespace mmixal
             return new AssemblyInstruction(label, op, expression);
         }
 
-        public void GenerateOutput(AssemblerLog log, StreamWriter streamWriter)
+        public void GenerateOutput(AssemblerState assemblerState, StreamWriter streamWriter)
         {
-            var output = Op.GenerateBinary(Expression);
+            var output = Op.GenerateBinary(this, assemblerState);
             if (!string.IsNullOrWhiteSpace(output.Warning))
             {
-                log.RaiseWarning(output.Warning);
+                assemblerState.RaiseWarning(output.Warning);
             }
             streamWriter.WriteLine(output.Output);
         }

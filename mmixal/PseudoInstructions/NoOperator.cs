@@ -8,7 +8,7 @@ namespace mmixal.PseudoInstructions
     {
         public override string Symbol => string.Empty;
 
-        public override OperatorOutput GenerateBinary(string expression)
+        public override OperatorOutput GenerateBinary(AssemblyInstruction assemblyInstruction, AssemblerState assemblerState)
         {
             return new OperatorOutput();
         }

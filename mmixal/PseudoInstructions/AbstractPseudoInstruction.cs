@@ -4,8 +4,7 @@ using System.Text;
 
 namespace mmixal.PseudoInstructions
 {
-    public abstract class AbstractPseudoInstruction
+    public abstract class AbstractPseudoInstruction : AbstractOperator
     {
-        public abstract string Symbol { get; }
     }
 }
