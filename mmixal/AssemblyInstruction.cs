@@ -11,17 +11,14 @@ namespace mmixal
 {
     public class AssemblyInstruction
     {
-        public string Label { get; }
+        public AsmLine AsmLine { get; }
 
         public AbstractOperator Op { get; }
 
-        public string Expression { get; }
-
-        public AssemblyInstruction(string label, AbstractOperator op, string expression)
+        public AssemblyInstruction(AbstractOperator op, AsmLine asmLine)
         {
-            Label = label ?? throw new ArgumentNullException(nameof(label));
+            AsmLine = asmLine ?? throw new ArgumentNullException(nameof(asmLine));
             Op = op ?? throw new ArgumentNullException(nameof(op));
-            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
         }
 
         private static string fetchArrayElement(string[] tokens, int index)
@@ -40,46 +37,21 @@ namespace mmixal
             {
                 throw new ArgumentNullException(nameof(operators));
             }
+            
+            var asmLine = AsmLine.Parse(line);
 
-            // tokenise line by spaces
-            var tokens = line?.Split(" ");
-
-            if (tokens.Length < 2)
-            {
-                return new AssemblyInstruction(string.Empty, new NoOperator(), string.Empty);
-            }
-
-            string label = string.Empty;
-            AbstractOperator op;
-            string expression = string.Empty;
-
-            // OP may be first or second token so check both for valid ops. If it first then label is "".
-            var firstOp = operators.SingleOrDefault(o => o.Symbol == tokens[0]);
-            var secondOp = operators.SingleOrDefault(o => o.Symbol == tokens[1]);
-
-            // favour second over first op
-            if (secondOp != null)
-            {
-                op = secondOp;
-                label = tokens[0];
-                expression = fetchArrayElement(tokens, 2);
-            }
-            else if (firstOp != null)
-            {
-                op = firstOp;
-                expression = fetchArrayElement(tokens, 1);
-            }
-            else
+            AbstractOperator op = operators.SingleOrDefault(o => o.Symbol == asmLine.Op);
+            if (op is null)
             {
                 // unknown operation
-                op = new ErroneousOperator(tokens[0]);
+                op = new ErroneousOperator(asmLine.Op);
             }
-            return new AssemblyInstruction(label, op, expression);
+            return new AssemblyInstruction(op, asmLine);
         }
 
         public void GenerateOutput(AssemblerState assemblerState, StreamWriter streamWriter)
         {
-            var output = Op.GenerateBinary(this, assemblerState);
+            var output = Op.GenerateBinary(assemblerState, AsmLine);
 
             if (!string.IsNullOrWhiteSpace(output.Warning))
             {

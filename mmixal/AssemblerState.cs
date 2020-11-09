@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using mmixal.Variable;
 
 namespace mmixal
 {
     public class AssemblerState
     {
-        private Dictionary<string, AbstractVariable> variables = new Dictionary<string, AbstractVariable>();
+        private Dictionary<string, ICompilerVariable> _definedVariables = new Dictionary<string, ICompilerVariable>();
+        public IReadOnlyDictionary<string, ICompilerVariable> DefinedVariables { get { return _definedVariables; } }
 
         public ulong ProgramCounter { get; set; } = 0;
 
@@ -23,11 +22,9 @@ namespace mmixal
             return this;
         }
 
-        public AssemblerState CreateRegisterAlias(string variableName, byte value)
+        public void DefineVariable(string variableName, ICompilerVariable compilerVariable)
         {
-            var registerAlias = new RegisterAlias(variableName, value);
-            variables.Add(variableName, registerAlias);
-            return this;
+            _definedVariables.Add(variableName, compilerVariable);
         }
 
     }

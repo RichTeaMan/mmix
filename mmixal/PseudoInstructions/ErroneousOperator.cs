@@ -13,8 +13,7 @@ namespace mmixal.PseudoInstructions
         {
             Symbol = opcode;
         }
-
-        public override OperatorOutput GenerateBinary(AssemblyInstruction assemblyInstruction, AssemblerState assemblerState)
+        public override OperatorOutput GenerateBinary(AssemblerState assemblerState, AsmLine asmLine)
         {
             return new OperatorOutput
             {

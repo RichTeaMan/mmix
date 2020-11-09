@@ -1,4 +1,5 @@
-﻿using mmixal.PseudoInstructions;
+﻿using mmixal.Instructions;
+using mmixal.PseudoInstructions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +25,7 @@ namespace mmixal
 
             var instructions = new List<AssemblyInstruction>();
             var operators = new List<AbstractOperator>();
-            operators.Add(new IsInstruction());
+            operators.Add(new IsPseudoInstruction());
             operators.Add(new LocInstruction());
 
             ulong lineNumber = 1;
@@ -40,15 +41,15 @@ namespace mmixal
                 }
             }
 
-            var log = new AssemblerState();
             var outFile = objectFile.Replace(".mms", ".mmo");
             File.Delete(outFile);
             using (var outStream = File.OpenWrite(outFile))
             using (var streamWriter = new StreamWriter(outStream))
             {
+                var assemblerState = new AssemblerState();
                 foreach (var instruction in instructions)
                 {
-                    instruction.GenerateOutput(log, streamWriter);
+                    instruction.GenerateOutput(assemblerState, streamWriter);
                 }
             }
 

@@ -4,11 +4,11 @@ namespace mmixal.PseudoInstructions
     {
         public override string Symbol => "LOC";
 
-        public override OperatorOutput GenerateBinary(AssemblyInstruction assemblyInstruction, AssemblerState assemblerState)
+        public override OperatorOutput GenerateBinary(AssemblerState assemblerState, AsmLine asmLine)
         {
             // register alias
             ulong location;
-            if (TryParseConstant(assemblyInstruction.Expression, out location))
+            if (TryParseConstant(asmLine.Expr, out location))
             {
                 assemblerState.ProgramCounter = location;
             }
