@@ -4,7 +4,8 @@ using System.Text;
 
 namespace mmixal
 {
-    public interface ICompilerVariable
+    public interface IAssemblerVariable
     {
+        byte FetchByteReference();
     }
 }

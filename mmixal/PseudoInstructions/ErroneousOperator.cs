@@ -6,9 +6,9 @@ namespace mmixal.PseudoInstructions
 {
     public class ErroneousOperator : AbstractOperator
     {
+        public string Symbol { get; }
 
-
-        public override string Symbol { get; }
+        public override string[] SupportedSymbols => new string[0];
         public ErroneousOperator(string opcode)
         {
             Symbol = opcode;

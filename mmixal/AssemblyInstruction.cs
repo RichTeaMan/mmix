@@ -40,7 +40,7 @@ namespace mmixal
             
             var asmLine = AsmLine.Parse(line);
 
-            AbstractOperator op = operators.SingleOrDefault(o => o.Symbol == asmLine.Op);
+            AbstractOperator op = operators.SingleOrDefault(o => o.SupportsSymbol(asmLine.Op));
             if (op is null)
             {
                 // unknown operation

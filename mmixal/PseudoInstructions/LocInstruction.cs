@@ -2,7 +2,7 @@ namespace mmixal.PseudoInstructions
 {
     public class LocInstruction : AbstractPseudoInstruction
     {
-        public override string Symbol => "LOC";
+        public override string[] SupportedSymbols => new[] { "LOC" };
 
         public override OperatorOutput GenerateBinary(AssemblerState assemblerState, AsmLine asmLine)
         {

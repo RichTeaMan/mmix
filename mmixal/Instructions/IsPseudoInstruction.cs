@@ -7,7 +7,7 @@ namespace mmixal.Instructions
 {
     public class IsPseudoInstruction : AbstractPseudoInstruction
     {
-        public override string Symbol => "IS";
+        public override string[] SupportedSymbols => new[] { "IS" };
 
         public override OperatorOutput GenerateBinary(AssemblerState assemblerState, AsmLine asmLine)
         {
@@ -26,7 +26,7 @@ namespace mmixal.Instructions
                 // constant
                 else if (int.TryParse(asmLine.Expr, out int constant))
                 {
-                    assemblerState.DefineVariable(asmLine.Label, new ConstantCompilerVariable(constant));
+                    assemblerState.DefineVariable(asmLine.Label, new ConstantAssemblerVariable(constant));
                 }
                 else
                 {

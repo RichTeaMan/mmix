@@ -1,8 +1,10 @@
-﻿using mmixal.Instructions;
+﻿using lib;
+using mmixal.Instructions;
 using mmixal.PseudoInstructions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace mmixal
@@ -20,13 +22,9 @@ namespace mmixal
                 return -1;
             }
             string objectFile = args[0];
-            var bytes = Encoding.ASCII.GetBytes(objectFile.Replace(".mmo", string.Empty));
-
 
             var instructions = new List<AssemblyInstruction>();
-            var operators = new List<AbstractOperator>();
-            operators.Add(new IsPseudoInstruction());
-            operators.Add(new LocInstruction());
+            var operators = ReflectionUtilities.FindExtendingClasses<AbstractOperator>().ToArray();
 
             ulong lineNumber = 1;
             using (var stream = File.OpenRead(objectFile))

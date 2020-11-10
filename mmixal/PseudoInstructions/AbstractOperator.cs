@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -8,7 +9,12 @@ namespace mmixal.PseudoInstructions
 {
     public abstract class AbstractOperator
     {
-        public abstract string Symbol { get; }
+        public abstract string[] SupportedSymbols { get; }
+
+        public bool SupportsSymbol(string symbol)
+        {
+            return SupportedSymbols.Contains(symbol);
+        }
 
         public bool TryParseRegister(string expression, out byte registerValue)
         {

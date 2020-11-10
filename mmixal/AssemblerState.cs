@@ -5,8 +5,8 @@ namespace mmixal
 {
     public class AssemblerState
     {
-        private Dictionary<string, ICompilerVariable> _definedVariables = new Dictionary<string, ICompilerVariable>();
-        public IReadOnlyDictionary<string, ICompilerVariable> DefinedVariables { get { return _definedVariables; } }
+        private Dictionary<string, IAssemblerVariable> _definedVariables = new Dictionary<string, IAssemblerVariable>();
+        public IReadOnlyDictionary<string, IAssemblerVariable> DefinedVariables { get { return _definedVariables; } }
 
         public ulong ProgramCounter { get; set; } = 0;
 
@@ -22,7 +22,7 @@ namespace mmixal
             return this;
         }
 
-        public void DefineVariable(string variableName, ICompilerVariable compilerVariable)
+        public void DefineVariable(string variableName, IAssemblerVariable compilerVariable)
         {
             _definedVariables.Add(variableName, compilerVariable);
         }
