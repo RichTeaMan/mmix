@@ -12,7 +12,7 @@ namespace mmixal.PseudoInstructions
     {
         private AbstractInstruction[] instructions = null;
 
-        public override string[] SupportedSymbols => new[] { "LDOU" };
+        public override string[] SupportedSymbols => new[] { "LDOU", "TRAP" };
 
         public override OperatorOutput GenerateBinary(AssemblerState assemblerState, AsmLine asmLine)
         {
@@ -26,7 +26,12 @@ namespace mmixal.PseudoInstructions
             {
                 throw new Exception("Unknown OP code.");
             }
-            var hex = new byte[] { instruction.OpCode, 255, 01, 00 }.ToHexString();
+            var hex = new byte[] {
+                instruction.OpCode,
+                assemblerState.ParseExprToken(asmLine.X),
+                assemblerState.ParseExprToken(asmLine.Y),
+                assemblerState.ParseExprToken(asmLine.Z),
+            }.ToHexString();
             return new OperatorOutput() { Output = hex };
         }
     }

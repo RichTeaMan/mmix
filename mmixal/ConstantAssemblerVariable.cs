@@ -15,7 +15,10 @@ namespace mmixal
 
         public byte FetchByteReference()
         {
-            throw new NotImplementedException();
+            // TODO what if constant is larger than a byte?
+            return (byte)Constant;
         }
+
+        public static implicit operator ConstantAssemblerVariable(int c) => new ConstantAssemblerVariable(c);
     }
 }

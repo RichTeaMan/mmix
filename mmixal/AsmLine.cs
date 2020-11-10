@@ -177,6 +177,12 @@ namespace mmixal
 
         public string Comment { get; } = string.Empty;
 
+        public string X => Expr.Split(",").FirstOrDefault();
+
+        public string Y => Expr.Split(",").Skip(1).FirstOrDefault();
+
+        public string Z => Expr.Split(",").Skip(2).FirstOrDefault();
+
         public AsmLine(string label, string op, string expr, string comment)
         {
             Label = label ?? throw new ArgumentNullException(nameof(label));
