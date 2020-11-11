@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace mmixal.PseudoInstructions
+﻿namespace mmixal.Instructions
 {
-    public class NoOperator : AbstractOperator
+    public class NoOperator : AbstractInstruction
     {
         public override string[] SupportedSymbols => new[] { string.Empty };
         public override OperatorOutput GenerateBinary(AssemblerState assemblerState, AsmLine asmLine)

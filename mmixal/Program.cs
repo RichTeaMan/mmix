@@ -1,5 +1,6 @@
 ﻿using lib;
-using mmixal.PseudoInstructions;
+using mmix;
+using mmixal.Instructions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,8 +21,8 @@ namespace mmixal
             }
             string objectFile = args[0];
 
-            var instructions = new List<AssemblyInstruction>();
-            var operators = ReflectionUtilities.FindExtendingClasses<AbstractOperator>().ToArray();
+            var asmLines = new List<AsmLine>();
+            var operators = ReflectionUtilities.FindExtendingClasses<AbstractInstruction>().ToArray();
 
             ulong lineNumber = 1;
             var assemblerState = new AssemblerState();
@@ -32,20 +33,25 @@ namespace mmixal
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    var instruction = AssemblyInstruction.ReadFromLine(operators, lineNumber, line);
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        continue;
+                    }
+
+                    var asmLine = AsmLine.Parse(line);
 
                     // hacks to forward read address references.
-                    if (instruction.Op is LocInstruction && assemblerState.TryParseConstant(instruction.AsmLine.Expr, out ulong location))
+                    if (asmLine.Op == "LOC" && assemblerState.TryParseConstant(asmLine.Expr, out ulong location))
                     {
                         virtualProgramCounter = location;
                     }
-                    if (!string.IsNullOrWhiteSpace(instruction.AsmLine.Label))
+                    if (!string.IsNullOrWhiteSpace(asmLine.Label))
                     {
-                        assemblerState.DefineVariable(instruction.AsmLine.Label, new OctaConstantAssemblerVariable(virtualProgramCounter));
+                        assemblerState.DefineVariable(asmLine.Label, new OctaConstantAssemblerVariable(virtualProgramCounter));
                     }
-                    virtualProgramCounter += instruction.Op.DetermineByteLength(instruction.AsmLine);
+                    virtualProgramCounter += operators.SingleOrDefault(o => o.SupportsSymbol(asmLine.Op))?.DetermineByteLength(asmLine) ?? 0;
 
-                    instructions.Add(instruction);
+                    asmLines.Add(asmLine);
                     lineNumber++;
                 }
             }
@@ -55,9 +61,32 @@ namespace mmixal
             using (var outStream = File.OpenWrite(outFile))
             using (var streamWriter = new StreamWriter(outStream))
             {
-                foreach (var instruction in instructions)
+                foreach (var asmLine in asmLines)
                 {
-                    instruction.GenerateOutput(assemblerState, streamWriter);
+                    AbstractInstruction op = operators.SingleOrDefault(o => o.SupportsSymbol(asmLine.Op));
+                    if (op is null)
+                    {
+                        // unknown operation
+                        op = new ErroneousInstruction(asmLine.Op);
+                    }
+
+                    var output = op.GenerateBinary(assemblerState, asmLine);
+
+                    if (!string.IsNullOrWhiteSpace(output.Warning))
+                    {
+                        assemblerState.RaiseWarning(output.Warning);
+                    }
+                    if (output.Output != null)
+                    {
+                        // ensure bytes are multiple of 4
+                        var bytes = new List<byte>(output.Output);
+                        for (int skip = 0; skip < bytes.Count; skip += 4)
+                        {
+                            var byteLine = bytes.Skip(skip).Take(4).ToArray();
+                            streamWriter.WriteLine($"{assemblerState.ProgramCounter:x}: {byteLine.ToHexString()}");
+                            assemblerState.ProgramCounter += 4;
+                        }
+                    }
                 }
             }
 

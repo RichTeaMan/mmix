@@ -1,15 +1,10 @@
-﻿using lib;
-using mmix;
-using mmix.Instructions;
+﻿using mmix;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 
-namespace mmixal.PseudoInstructions
+namespace mmixal.Instructions
 {
-    public class GetAInstruction : AbstractOperator
+    public class GetAInstruction : AbstractInstruction
     {
 
         public override string[] SupportedSymbols => new[] { "GETA" };

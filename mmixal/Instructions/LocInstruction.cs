@@ -1,4 +1,4 @@
-namespace mmixal.PseudoInstructions
+namespace mmixal.Instructions
 {
     public class LocInstruction : AbstractPseudoInstruction
     {

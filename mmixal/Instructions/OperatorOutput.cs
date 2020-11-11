@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace mmixal.PseudoInstructions
+namespace mmixal.Instructions
 {
     public class OperatorOutput
     {

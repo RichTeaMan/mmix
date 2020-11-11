@@ -231,9 +231,9 @@ namespace mmixal
             }
 
             string label = string.Empty;
-            string op = string.Empty;
-            string expression = string.Empty;
-            string comments = string.Empty;
+            string op;
+            string expression;
+            string comments;
 
             if (OPCODES.Contains(tokens[0]))
             {

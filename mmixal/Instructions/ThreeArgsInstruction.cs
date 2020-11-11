@@ -1,16 +1,12 @@
 ﻿using lib;
-using mmix;
-using mmix.Instructions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace mmixal.PseudoInstructions
+namespace mmixal.Instructions
 {
-    public class ThreeArgsInstruction : AbstractOperator
+    public class ThreeArgsInstruction : AbstractInstruction
     {
-        private AbstractInstruction[] instructions = null;
+        private mmix.Instructions.AbstractInstruction[] instructions = null;
 
         public override string[] SupportedSymbols => new[] { "LDOU", "TRAP" };
 
@@ -18,7 +14,7 @@ namespace mmixal.PseudoInstructions
         {
             if (instructions == null)
             {
-                instructions = ReflectionUtilities.FindExtendingClasses<AbstractInstruction>().ToArray();
+                instructions = ReflectionUtilities.FindExtendingClasses<mmix.Instructions.AbstractInstruction>().ToArray();
             }
 
             var instruction = instructions.SingleOrDefault(i => i.Symbol == asmLine.Op);

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 
-namespace mmixal.PseudoInstructions
+namespace mmixal.Instructions
 {
-    public abstract class AbstractOperator
+    public abstract class AbstractInstruction
     {
         public abstract string[] SupportedSymbols { get; }
 

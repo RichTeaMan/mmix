@@ -1,9 +1,4 @@
-﻿using mmixal.PseudoInstructions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace mmixal.Instructions
+﻿namespace mmixal.Instructions
 {
     public class IsPseudoInstruction : AbstractPseudoInstruction
     {

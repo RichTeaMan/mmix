@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace mmixal.PseudoInstructions
+﻿namespace mmixal.Instructions
 {
-    public class ErroneousOperator : AbstractOperator
+    public class ErroneousInstruction : AbstractInstruction
     {
         public string Symbol { get; }
 
         public override string[] SupportedSymbols => new string[0];
-        public ErroneousOperator(string opcode)
+        public ErroneousInstruction(string opcode)
         {
             Symbol = opcode;
         }
