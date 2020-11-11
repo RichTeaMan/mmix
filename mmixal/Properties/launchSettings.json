@@ -2,7 +2,7 @@
   "profiles": {
     "mmixal": {
       "commandName": "Project",
-      "commandLineArgs": "programs/hello.mms"
+      "commandLineArgs": "programs/find-primes.mms"
     }
   }
 }

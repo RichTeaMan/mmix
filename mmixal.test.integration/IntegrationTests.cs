@@ -106,5 +106,40 @@ namespace mmixal.test.integration
 
             Assert.AreEqual(0, mmixProcess.ExitCode);
         }
+
+        [TestMethod]
+        public void FindPrimesTest()
+        {
+            using var mmixalProcess = new ExternalProgram().Mmixal();
+
+            mmixalProcess.StartInfo.Arguments = "programs/find-primes.mms";
+            mmixalProcess.Start();
+            string mmixalOutput = mmixalProcess.StandardOutput.ReadToEnd();
+            mmixalProcess.WaitForExit();
+
+            Console.WriteLine("MMIXAL output:");
+            Console.WriteLine(mmixalOutput);
+            Console.WriteLine();
+            Console.WriteLine("-----------");
+            Console.WriteLine();
+
+            Assert.AreEqual(0, mmixalProcess.ExitCode);
+
+            string mmixOutput;
+            using var mmixProcess = new ExternalProgram().Mmix();
+
+            mmixProcess.StartInfo.Arguments = "programs/find-primes.mmo";
+            mmixProcess.Start();
+            mmixOutput = mmixProcess.StandardOutput.ReadToEnd();
+            mmixProcess.WaitForExit();
+
+            Console.WriteLine("MMIX output:");
+            Console.WriteLine(mmixOutput);
+            Console.WriteLine();
+            Console.WriteLine("-----------");
+            Console.WriteLine();
+
+            Assert.AreEqual(0, mmixProcess.ExitCode);
+        }
     }
 }

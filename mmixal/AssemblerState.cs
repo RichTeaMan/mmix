@@ -33,19 +33,27 @@ namespace mmixal
             { "StdErr", (ByteConstantAssemblerVariable)2 },
         };
 
-        public IReadOnlyDictionary<string, IAssemblerVariable> DefinedVariables { get { return _definedVariables; } }
+        public IReadOnlyDictionary<string, IAssemblerVariable> DefinedVariables => _definedVariables;
+
+        private List<string> _warnings = new List<string>();
+
+        public IReadOnlyCollection<string> Warnings => _warnings;
+
+        private List<string> _errors = new List<string>();
+
+        public IReadOnlyCollection<string> Errors => _errors;
 
         public Octa ProgramCounter { get; set; } = 0;
 
         public AssemblerState RaiseWarning(string message)
         {
-            Console.WriteLine($"Warning - {message}");
+            _warnings.Add(message);
             return this;
         }
 
         public AssemblerState RaiseError(string message)
         {
-            Console.WriteLine($"Warning - {message}");
+            _errors.Add(message);
             return this;
         }
 

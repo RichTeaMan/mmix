@@ -25,6 +25,9 @@
     <None Update="mmixal.runtimeconfig.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="programs\find-primes.mms">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="programs\hello-whitespaces.mms">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

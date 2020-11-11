@@ -44,7 +44,16 @@ namespace mmixal
                         continue;
                     }
 
-                    var asmLine = AsmLine.Parse(line);
+                    AsmLine asmLine;
+                    try
+                    {
+                        asmLine = AsmLine.Parse(line);
+                    }
+                    catch (Exception ex)
+                    {
+                        assemblerState.RaiseError(ex.Message);
+                        continue;
+                    }                    
 
                     // hacks to forward read address references.
                     if (asmLine.Op == "LOC" && assemblerState.TryParseConstant(asmLine.Expr, out ulong location))
@@ -63,40 +72,69 @@ namespace mmixal
             }
 
             var outFile = objectFile.Replace(".mms", ".mmo");
-            File.Delete(outFile);
-            using (var outStream = File.OpenWrite(outFile))
-            using (var streamWriter = new StreamWriter(outStream))
+
+            if (!assemblerState.Errors.Any())
             {
-                foreach (var asmLine in asmLines)
+                using (var outStream = File.OpenWrite(outFile))
+                using (var streamWriter = new StreamWriter(outStream))
                 {
-                    AbstractInstruction op = operators.SingleOrDefault(o => o.SupportsSymbol(asmLine.Op));
-                    if (op is null)
+                    foreach (var asmLine in asmLines)
                     {
-                        // unknown operation
-                        op = new ErroneousInstruction(asmLine.Op);
-                    }
-
-                    var output = op.GenerateBinary(assemblerState, asmLine);
-
-                    if (!string.IsNullOrWhiteSpace(output.Warning))
-                    {
-                        assemblerState.RaiseWarning(output.Warning);
-                    }
-                    if (output.Output != null)
-                    {
-                        // ensure bytes are multiple of 4
-                        var bytes = new List<byte>(output.Output);
-                        for (int skip = 0; skip < bytes.Count; skip += 4)
+                        AbstractInstruction op = operators.SingleOrDefault(o => o.SupportsSymbol(asmLine.Op));
+                        if (op is null)
                         {
-                            var byteLine = bytes.Skip(skip).Take(4).ToArray();
-                            streamWriter.WriteLine($"{assemblerState.ProgramCounter:x}: {byteLine.ToHexString()}");
-                            assemblerState.ProgramCounter += 4;
+                            // unknown operation
+                            op = new ErroneousInstruction(asmLine.Op);
+                        }
+
+                        OperatorOutput output = null;
+                        try
+                        {
+                            output = op.GenerateBinary(assemblerState, asmLine);
+                        }
+                        catch (Exception ex)
+                        {
+                            assemblerState.RaiseError(ex.Message);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(output?.Warning))
+                        {
+                            assemblerState.RaiseWarning(output?.Warning);
+                        }
+                        if (output.Output != null)
+                        {
+                            // ensure bytes are multiple of 4
+                            var bytes = new List<byte>(output.Output);
+                            for (int skip = 0; skip < bytes.Count; skip += 4)
+                            {
+                                var byteLine = bytes.Skip(skip).Take(4).ToArray();
+                                streamWriter.WriteLine($"{assemblerState.ProgramCounter:x}: {byteLine.ToHexString()}");
+                                assemblerState.ProgramCounter += 4;
+                            }
                         }
                     }
                 }
             }
 
-            Console.WriteLine($"Written to {outFile}.");
+            Console.WriteLine($"Program assembled with {assemblerState.Warnings.Count} warnings and {assemblerState.Errors.Count} errors");
+            foreach(var warning in assemblerState.Warnings)
+            {
+                Console.WriteLine($"Warning - {warning}");
+            }
+            foreach (var error in assemblerState.Errors)
+            {
+                Console.WriteLine($"Error - {error}");
+            }
+
+            if (assemblerState.Errors.Any())
+            {
+                Console.WriteLine("Program not written due to previous errors.");
+                File.Delete(outFile);
+            }
+            else
+            {
+                Console.WriteLine($"Program written to {outFile}.");
+            }
 
             return 0;
         }

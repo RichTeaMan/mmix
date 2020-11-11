@@ -166,7 +166,9 @@ namespace mmixal
             "SYNC",
             "SWYM",
             "GET",
-            "TRIP"
+            "TRIP",
+            "SET",  // equivalent to SETL
+            "LDA",  // equivalent to ADDU
         });
 
         public string Label { get; } = string.Empty;

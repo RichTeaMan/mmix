@@ -11,10 +11,8 @@
         }
         public override OperatorOutput GenerateBinary(AssemblerState assemblerState, AsmLine asmLine)
         {
-            return new OperatorOutput
-            {
-                Warning = $"'{Symbol}' is not a thing."
-            };
+            assemblerState.RaiseError($"'{Symbol}' is not implemented.");
+            return new OperatorOutput();
         }
     }
 }
