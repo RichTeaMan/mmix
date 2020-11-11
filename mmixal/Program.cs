@@ -1,11 +1,9 @@
 ﻿using lib;
-using mmixal.Instructions;
 using mmixal.PseudoInstructions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace mmixal
 {
@@ -14,7 +12,6 @@ namespace mmixal
         static int Main(string[] args)
         {
             Console.WriteLine("MMIXAL Assembler");
-
 
             if (args.Length < 1)
             {
@@ -37,15 +34,10 @@ namespace mmixal
                 {
                     var instruction = AssemblyInstruction.ReadFromLine(operators, lineNumber, line);
 
-
                     // hacks to forward read address references.
-                    if (instruction.Op is LocInstruction)
+                    if (instruction.Op is LocInstruction && assemblerState.TryParseConstant(instruction.AsmLine.Expr, out ulong location))
                     {
-                        ulong location;
-                        if (assemblerState.TryParseConstant(instruction.AsmLine.Expr, out location))
-                        {
-                            virtualProgramCounter = location;
-                        }
+                        virtualProgramCounter = location;
                     }
                     if (!string.IsNullOrWhiteSpace(instruction.AsmLine.Label))
                     {
@@ -68,6 +60,8 @@ namespace mmixal
                     instruction.GenerateOutput(assemblerState, streamWriter);
                 }
             }
+
+            Console.WriteLine($"Written to {outFile}.");
 
             return 0;
         }
