@@ -11,3 +11,5 @@ the [MMIX website](https://mmix.cs.hm.edu/doc/instructions-en.html).
 * MMIX - the MMIX computer
 * MMIXAL - MMIX assembler
 * lib - shared code
+* mmixal.test - unit tets for the assembler
+* mmix.test.integration - tests that assemble code then run the program in the simulator
