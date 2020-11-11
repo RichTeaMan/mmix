@@ -38,18 +38,14 @@ namespace mmixal.test.integration
         }
 
         [TestMethod]
-        public void HelloWorld()
+        public void HelloWorldTest()
         {
-            string mmixalOutput;
-            using (var mmixalProcess = new ExternalProgram().Mmixal())
-            {
-                mmixalProcess.StartInfo.Arguments = "programs/hello.mms";
-                mmixalProcess.Start();
-                mmixalOutput = mmixalProcess.StandardOutput.ReadToEnd();
-                mmixalProcess.WaitForExit();
+            using var mmixalProcess = new ExternalProgram().Mmixal();
 
-                Assert.AreEqual(0, mmixalProcess.ExitCode);
-            }
+            mmixalProcess.StartInfo.Arguments = "programs/hello.mms";
+            mmixalProcess.Start();
+            string mmixalOutput = mmixalProcess.StandardOutput.ReadToEnd();
+            mmixalProcess.WaitForExit();
 
             Console.WriteLine("MMIXAL output:");
             Console.WriteLine(mmixalOutput);
@@ -57,22 +53,58 @@ namespace mmixal.test.integration
             Console.WriteLine("-----------");
             Console.WriteLine();
 
-            string mmixOutput;
-            using (var mmixProcess = new ExternalProgram().Mmix())
-            {
-                mmixProcess.StartInfo.Arguments = "programs/hello.mmo";
-                mmixProcess.Start();
-                mmixOutput = mmixProcess.StandardOutput.ReadToEnd();
-                mmixProcess.WaitForExit();
+            Assert.AreEqual(0, mmixalProcess.ExitCode);
 
-                Assert.AreEqual(0, mmixProcess.ExitCode);
-            }
+            string mmixOutput;
+            using var mmixProcess = new ExternalProgram().Mmix();
+
+            mmixProcess.StartInfo.Arguments = "programs/hello.mmo";
+            mmixProcess.Start();
+            mmixOutput = mmixProcess.StandardOutput.ReadToEnd();
+            mmixProcess.WaitForExit();
 
             Console.WriteLine("MMIX output:");
             Console.WriteLine(mmixOutput);
             Console.WriteLine();
             Console.WriteLine("-----------");
             Console.WriteLine();
+
+            Assert.AreEqual(0, mmixProcess.ExitCode);
+        }
+
+        [TestMethod]
+        public void HelloWorldWhitespacesTest()
+        {
+            using var mmixalProcess = new ExternalProgram().Mmixal();
+
+            mmixalProcess.StartInfo.Arguments = "programs/hello-whitespaces.mms";
+            mmixalProcess.Start();
+            string mmixalOutput = mmixalProcess.StandardOutput.ReadToEnd();
+            mmixalProcess.WaitForExit();
+
+            Console.WriteLine("MMIXAL output:");
+            Console.WriteLine(mmixalOutput);
+            Console.WriteLine();
+            Console.WriteLine("-----------");
+            Console.WriteLine();
+
+            Assert.AreEqual(0, mmixalProcess.ExitCode);
+
+            string mmixOutput;
+            using var mmixProcess = new ExternalProgram().Mmix();
+
+            mmixProcess.StartInfo.Arguments = "programs/hello-whitespaces.mmo";
+            mmixProcess.Start();
+            mmixOutput = mmixProcess.StandardOutput.ReadToEnd();
+            mmixProcess.WaitForExit();
+
+            Console.WriteLine("MMIX output:");
+            Console.WriteLine(mmixOutput);
+            Console.WriteLine();
+            Console.WriteLine("-----------");
+            Console.WriteLine();
+
+            Assert.AreEqual(0, mmixProcess.ExitCode);
         }
     }
 }
