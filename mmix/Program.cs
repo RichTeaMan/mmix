@@ -1,14 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace mmix
 {
     class Program
     {
+        public static string VersionNumber => typeof(Program).Assembly
+          .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+          .InformationalVersion;
+
         static int Main(string[] args)
         {
             Console.WriteLine("MMIX Simulator");
+            Console.WriteLine($"Thomas Holmes 2020. {VersionNumber}");
 
             if (args.Length < 1)
             {
@@ -25,7 +31,7 @@ namespace mmix
             mmixComputer.Registers[1].Store(0x08);
 
             mmixComputer.AddToMemory(0x08, (ulong)pointer);
-            foreach(var b in bytes)
+            foreach (var b in bytes)
             {
                 mmixComputer.Memory[pointer] = b;
                 pointer++;

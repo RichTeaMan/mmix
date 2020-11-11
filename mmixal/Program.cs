@@ -5,14 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace mmixal
 {
     class Program
     {
+        public static string VersionNumber => typeof(Program).Assembly
+          .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+          .InformationalVersion;
+
         static int Main(string[] args)
         {
             Console.WriteLine("MMIXAL Assembler");
+            Console.WriteLine($"Thomas Holmes 2020. {VersionNumber}");
 
             if (args.Length < 1)
             {
