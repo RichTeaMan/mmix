@@ -4,11 +4,11 @@ using System.Text;
 
 namespace mmixal
 {
-    public class ConstantAssemblerVariable : IAssemblerVariable
+    public class ByteConstantAssemblerVariable : IAssemblerVariable
     {
-        public int Constant { get; }
+        public byte Constant { get; }
 
-        public ConstantAssemblerVariable(int constant)
+        public ByteConstantAssemblerVariable(byte constant)
         {
             Constant = constant;
         }
@@ -19,6 +19,6 @@ namespace mmixal
             return (byte)Constant;
         }
 
-        public static implicit operator ConstantAssemblerVariable(int c) => new ConstantAssemblerVariable(c);
+        public static implicit operator ByteConstantAssemblerVariable(int c) => new ByteConstantAssemblerVariable((byte)c);
     }
 }

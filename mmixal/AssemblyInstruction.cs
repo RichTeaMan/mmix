@@ -64,7 +64,7 @@ namespace mmixal
                 for (int skip = 0; skip < bytes.Count; skip += 4)
                 {
                     var byteLine = bytes.Skip(skip).Take(4).ToArray();
-                    streamWriter.WriteLine($"#{assemblerState.ProgramCounter:x}: {byteLine.ToHexString()}");
+                    streamWriter.WriteLine($"{assemblerState.ProgramCounter:x}: {byteLine.ToHexString()}");
                     assemblerState.ProgramCounter += 4;
                 }
             }

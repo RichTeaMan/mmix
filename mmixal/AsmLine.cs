@@ -183,6 +183,10 @@ namespace mmixal
 
         public string Z { get; } = string.Empty;
 
+        public string[] Args => new[] { X, Y, Z }.Where(a => !string.IsNullOrEmpty(a)).ToArray();
+
+        public int ArgCount => Args.Count();
+
         public AsmLine(string label, string op, string expr, string comment, string x, string y, string z)
         {
             Label = label ?? throw new ArgumentNullException(nameof(label));

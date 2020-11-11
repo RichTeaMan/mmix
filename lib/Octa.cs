@@ -14,7 +14,13 @@ namespace mmix
             this.bytes = bytes;
         }
 
-        public Octa() : this(new byte[8]) {
+        public Octa(ulong value) : this()
+        {
+            bytes = value.ToBytes();
+        }
+
+        public Octa() : this(new byte[8])
+        {
         }
 
         public Wyde OpCode => new Wyde(new byte[] { bytes[0], bytes[1] });
@@ -22,18 +28,6 @@ namespace mmix
         public Wyde X => new Wyde(new byte[] { bytes[2], bytes[3] });
         public Wyde Y => new Wyde(new byte[] { bytes[4], bytes[5] });
         public Wyde Z => new Wyde(new byte[] { bytes[6], bytes[7] });
-
-        public void Store(long value)
-        {
-            byte[] bytes = value.ToBytes();
-            this.bytes.SetArray(bytes);
-        }
-
-        public void Store(ulong value)
-        {
-            byte[] bytes = value.ToBytes();
-            this.bytes.SetArray(bytes);
-        }
 
         public void Store(byte[] bytes)
         {
@@ -62,6 +56,32 @@ namespace mmix
         public override string ToString()
         {
             return bytes.ToHexString();
+        }
+
+        public static implicit operator Octa(int v)
+        {
+            return new Octa((ulong)v);
+        }
+
+        public static implicit operator Octa(ulong v)
+        {
+            return new Octa(v);
+        }
+
+        public static Octa operator +(Octa a, Octa b)
+        {
+            var u = a.ToULong() + b.ToULong();
+            return new Octa(u);
+        }
+
+        public static Octa operator +(Octa a, int b) => a + (Octa)b;
+
+        public static Octa operator +(Octa a, ulong b) => a + (Octa)b;
+
+        public static Octa operator -(Octa a, Octa b)
+        {
+            var u = a.ToULong() - b.ToULong();
+            return new Octa(u);
         }
     }
 }

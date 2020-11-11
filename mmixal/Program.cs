@@ -27,13 +27,32 @@ namespace mmixal
             var operators = ReflectionUtilities.FindExtendingClasses<AbstractOperator>().ToArray();
 
             ulong lineNumber = 1;
+            var assemblerState = new AssemblerState();
             using (var stream = File.OpenRead(objectFile))
             using (var reader = new StreamReader(stream))
             {
+                ulong virtualProgramCounter = 0;
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     var instruction = AssemblyInstruction.ReadFromLine(operators, lineNumber, line);
+
+
+                    // hacks to forward read address references.
+                    if (instruction.Op is LocInstruction)
+                    {
+                        ulong location;
+                        if (assemblerState.TryParseConstant(instruction.AsmLine.Expr, out location))
+                        {
+                            virtualProgramCounter = location;
+                        }
+                    }
+                    if (!string.IsNullOrWhiteSpace(instruction.AsmLine.Label))
+                    {
+                        assemblerState.DefineVariable(instruction.AsmLine.Label, new OctaConstantAssemblerVariable(virtualProgramCounter));
+                    }
+                    virtualProgramCounter += instruction.Op.DetermineByteLength(instruction.AsmLine);
+
                     instructions.Add(instruction);
                     lineNumber++;
                 }
@@ -44,7 +63,6 @@ namespace mmixal
             using (var outStream = File.OpenWrite(outFile))
             using (var streamWriter = new StreamWriter(outStream))
             {
-                var assemblerState = new AssemblerState();
                 foreach (var instruction in instructions)
                 {
                     instruction.GenerateOutput(assemblerState, streamWriter);

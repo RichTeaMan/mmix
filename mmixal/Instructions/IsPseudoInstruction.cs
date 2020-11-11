@@ -26,7 +26,7 @@ namespace mmixal.Instructions
                 // constant
                 else if (int.TryParse(asmLine.Expr, out int constant))
                 {
-                    assemblerState.DefineVariable(asmLine.Label, new ConstantAssemblerVariable(constant));
+                    assemblerState.DefineVariable(asmLine.Label, new ByteConstantAssemblerVariable((byte)constant));
                 }
                 else
                 {

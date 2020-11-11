@@ -37,6 +37,24 @@ namespace mmix
             return result;
         }
 
+        public static int ToShort(this byte[] b)
+        {
+            if (b?.Length != 2)
+            {
+                throw new ArgumentException("Must have 2 bytes.");
+            }
+            return BitConverter.ToInt16(b.Reverse().ToArray());
+        }
+
+        public static uint ToUShort(this byte[] b)
+        {
+            if (b?.Length != 4)
+            {
+                throw new ArgumentException("Must have 2 bytes.");
+            }
+            return BitConverter.ToUInt16(b.Reverse().ToArray());
+        }
+
         public static int ToInt(this byte[] b)
         {
             if (b?.Length != 4)
@@ -71,6 +89,16 @@ namespace mmix
                 throw new ArgumentException("Must have 8 bytes.");
             }
             return BitConverter.ToUInt64(b.Reverse().ToArray());
+        }
+
+        public static byte[] ToBytes(this short n)
+        {
+            return BitConverter.GetBytes(n).Reverse().ToArray();
+        }
+
+        public static byte[] ToBytes(this ushort n)
+        {
+            return BitConverter.GetBytes(n).Reverse().ToArray();
         }
 
         public static byte[] ToBytes(this int n)

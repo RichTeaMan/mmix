@@ -43,5 +43,10 @@ namespace mmixal.PseudoInstructions
         }
 
         public abstract OperatorOutput GenerateBinary(AssemblerState assemblerState, AsmLine asmLine);
+
+        /// <summary>
+        /// Gets the length in bytes this operation will take in memory.
+        /// </summary>
+        public virtual ulong DetermineByteLength(AsmLine asmLine) => 4;
     }
 }

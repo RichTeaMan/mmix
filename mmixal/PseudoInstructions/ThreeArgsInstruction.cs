@@ -28,9 +28,9 @@ namespace mmixal.PseudoInstructions
             }
             var hex = new byte[] {
                 instruction.OpCode,
-                assemblerState.ParseExprToken(asmLine.X),
-                assemblerState.ParseExprToken(asmLine.Y),
-                assemblerState.ParseExprToken(asmLine.Z),
+                assemblerState.ParseExprToken(asmLine.X).FetchByte(),
+                assemblerState.ParseExprToken(asmLine.Y).FetchByte(),
+                assemblerState.ParseExprToken(asmLine.Z).FetchByte(),
             };
             return new OperatorOutput() { Output = hex };
         }
