@@ -6,7 +6,7 @@ namespace mmixal.PseudoInstructions
 {
     public class OperatorOutput
     {
-        public string Output { get; set; }
+        public byte[] Output { get; set; }
 
         public string Warning { get; set; }
     }

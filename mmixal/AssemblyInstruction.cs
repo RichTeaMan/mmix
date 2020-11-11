@@ -1,4 +1,4 @@
-﻿using mmix.Instructions;
+﻿using mmix;
 using mmixal.PseudoInstructions;
 using System;
 using System.Collections.Generic;
@@ -57,10 +57,16 @@ namespace mmixal
             {
                 assemblerState.RaiseWarning(output.Warning);
             }
-            if (!(Op is AbstractPseudoInstruction))
+            if (output.Output != null)
             {
-                streamWriter.WriteLine($"#{assemblerState.ProgramCounter.ToString("x")}: {output.Output}");
-                assemblerState.ProgramCounter += 4;
+                // ensure bytes are multiple of 4
+                var bytes = new List<byte>(output.Output);
+                for (int skip = 0; skip < bytes.Count; skip += 4)
+                {
+                    var byteLine = bytes.Skip(skip).Take(4).ToArray();
+                    streamWriter.WriteLine($"#{assemblerState.ProgramCounter:x}: {byteLine.ToHexString()}");
+                    assemblerState.ProgramCounter += 4;
+                }
             }
         }
     }

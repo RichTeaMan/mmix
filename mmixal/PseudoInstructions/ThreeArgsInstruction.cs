@@ -31,7 +31,7 @@ namespace mmixal.PseudoInstructions
                 assemblerState.ParseExprToken(asmLine.X),
                 assemblerState.ParseExprToken(asmLine.Y),
                 assemblerState.ParseExprToken(asmLine.Z),
-            }.ToHexString();
+            };
             return new OperatorOutput() { Output = hex };
         }
     }

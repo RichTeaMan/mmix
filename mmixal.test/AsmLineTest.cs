@@ -47,6 +47,9 @@ namespace mmixal.test
             Assert.AreEqual("Main", asmLine.Label);
             Assert.AreEqual("LDOU", asmLine.Op);
             Assert.AreEqual("$255,argv,0", asmLine.Expr);
+            Assert.AreEqual("$255", asmLine.X);
+            Assert.AreEqual("argv", asmLine.Y);
+            Assert.AreEqual("0", asmLine.Z);
             Assert.AreEqual("this is the main entry", asmLine.Comment);
         }
 
@@ -57,7 +60,10 @@ namespace mmixal.test
 
             Assert.AreEqual("String", asmLine.Label);
             Assert.AreEqual("BYTE", asmLine.Op);
-            Assert.AreEqual(", world,#a,0", asmLine.Expr);
+            Assert.AreEqual("\", world\",#a,0", asmLine.Expr);
+            Assert.AreEqual("\", world\"", asmLine.X);
+            Assert.AreEqual("#a", asmLine.Y);
+            Assert.AreEqual("0", asmLine.Z);
             Assert.AreEqual("", asmLine.Comment);
         }
 
@@ -68,7 +74,10 @@ namespace mmixal.test
 
             Assert.AreEqual("String", asmLine.Label);
             Assert.AreEqual("BYTE", asmLine.Op);
-            Assert.AreEqual(", world,#a,0", asmLine.Expr);
+            Assert.AreEqual("\", world\",#a,0", asmLine.Expr);
+            Assert.AreEqual("\", world\"", asmLine.X);
+            Assert.AreEqual("#a", asmLine.Y);
+            Assert.AreEqual("0", asmLine.Z);
             Assert.AreEqual("hello world", asmLine.Comment);
         }
 

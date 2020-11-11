@@ -65,6 +65,15 @@ namespace mmixal
                 ulong.TryParse(expression, out value));
         }
 
+        public bool TryParseConstant(string expression, out byte value)
+        {
+            value = 0;
+            return !string.IsNullOrWhiteSpace(expression) &&
+                ((expression.StartsWith("#") &&
+                byte.TryParse(expression.Remove(0, 1), NumberStyles.HexNumber, null, out value)) ||
+                byte.TryParse(expression, out value));
+        }
+
         /// <summary>
         /// Attempts to parse a token. The token should be an expression (not an op code) and can resolve a raw constant, a register reference, or an alias.
         /// </summary>

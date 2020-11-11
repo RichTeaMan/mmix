@@ -28,8 +28,18 @@ namespace mmixal.PseudoInstructions
         {
             value = 0;
             return !string.IsNullOrWhiteSpace(expression) &&
-                expression.StartsWith("#") &&
-                ulong.TryParse(expression.Remove(0, 1), NumberStyles.HexNumber, null, out value);
+                ((expression.StartsWith("#") &&
+                ulong.TryParse(expression.Remove(0, 1), NumberStyles.HexNumber, null, out value)) ||
+                ulong.TryParse(expression, out value));
+        }
+
+        public bool TryParseConstant(string expression, out byte value)
+        {
+            value = 0;
+            return !string.IsNullOrWhiteSpace(expression) &&
+                ((expression.StartsWith("#") &&
+                byte.TryParse(expression.Remove(0, 1), NumberStyles.HexNumber, null, out value)) ||
+                byte.TryParse(expression, out value));
         }
 
         public abstract OperatorOutput GenerateBinary(AssemblerState assemblerState, AsmLine asmLine);

@@ -177,27 +177,30 @@ namespace mmixal
 
         public string Comment { get; } = string.Empty;
 
-        public string X => Expr.Split(",").FirstOrDefault();
+        public string X { get; } = string.Empty;
 
-        public string Y => Expr.Split(",").Skip(1).FirstOrDefault();
+        public string Y { get; } = string.Empty;
 
-        public string Z => Expr.Split(",").Skip(2).FirstOrDefault();
+        public string Z { get; } = string.Empty;
 
-        public AsmLine(string label, string op, string expr, string comment)
+        public AsmLine(string label, string op, string expr, string comment, string x, string y, string z)
         {
             Label = label ?? throw new ArgumentNullException(nameof(label));
             Op = op ?? throw new ArgumentNullException(nameof(op));
             Expr = expr ?? throw new ArgumentNullException(nameof(expr));
             Comment = comment ?? throw new ArgumentNullException(nameof(comment));
+            X = x ?? throw new ArgumentNullException(nameof(x));
+            Y = y ?? throw new ArgumentNullException(nameof(y));
+            Z = z ?? throw new ArgumentNullException(nameof(z));
         }
 
         public static AsmLine Parse(string line)
         {
             var tokens = new List<string>();
+            bool quoteMode = false;
             if (line != null)
             {
                 StringBuilder token = new StringBuilder();
-                bool quoteMode = false;
                 foreach (var l in line)
                 {
                     if (l == ' ' && !quoteMode)
@@ -208,6 +211,7 @@ namespace mmixal
                     else if (l == '"')
                     {
                         quoteMode = !quoteMode;
+                        token.Append(l);
                     }
                     else
                     {
@@ -227,7 +231,8 @@ namespace mmixal
             string expression = string.Empty;
             string comments = string.Empty;
 
-            if (OPCODES.Contains(tokens[0])) {
+            if (OPCODES.Contains(tokens[0]))
+            {
                 op = tokens[0];
                 expression = tokens[1];
                 comments = string.Join(" ", tokens.Skip(2));
@@ -244,7 +249,37 @@ namespace mmixal
                 throw new Exception($"Neither '{tokens[0]}' or '{tokens[1]}' are valid opcodes.");
             }
 
-            return new AsmLine(label, op, expression, comments);
+            // build XYZ args
+            var args = new List<string>();
+            StringBuilder arg = new StringBuilder();
+            foreach (var l in expression)
+            {
+                if (l == ',' && !quoteMode)
+                {
+                    args.Add(arg.ToString());
+                    arg = new StringBuilder();
+                }
+                else if (l == '"')
+                {
+                    quoteMode = !quoteMode;
+                    arg.Append(l);
+                }
+                else
+                {
+                    arg.Append(l);
+                }
+            }
+            args.Add(arg.ToString());
+            if (args.Count > 3)
+            {
+                throw new Exception($"Expressions cannot have more than 3 arguments. {args.Count} arguments: {expression}.");
+            }
+
+            string x = args.ElementAtOrDefault(0) ?? string.Empty;
+            string y = args.ElementAtOrDefault(1) ?? string.Empty;
+            string z = args.ElementAtOrDefault(2) ?? string.Empty;
+
+            return new AsmLine(label, op, expression, comments, x, y, z);
         }
 
         public override string ToString()
